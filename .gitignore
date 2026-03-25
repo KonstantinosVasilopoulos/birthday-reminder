@@ -1,0 +1,23 @@
+venv/
+.venv/
+__pycache__/
+.vscode
+*.pyc
+
+# Azure local config
+local.settings.json
+.azure/
+
+# Portal-exported templates (contain subscription IDs and storage keys)
+template.json
+parameters.json
+
+# Secrets and env files
+*.tmp
+*.env
+web/.env
+!.env.example
+!web/.env.example
+
+# Claude
+CLAUDE.md

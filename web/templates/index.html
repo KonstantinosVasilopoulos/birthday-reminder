@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Reminder</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; color: #222; background: #fff; }
+    h1 { margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+    th { text-align: left; border-bottom: 2px solid #ddd; padding: 8px 12px; }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+    tr:hover td { background: #f9f9f9; }
+    .days { color: #888; font-size: 0.9em; }
+    .empty { color: #aaa; font-style: italic; }
+    form.add { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    form.add label { display: flex; flex-direction: column; gap: 4px; font-size: 0.9em; }
+    form.add input { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; background: inherit; color: inherit; }
+    button { padding: 7px 16px; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+    button:hover { background: #555; }
+    button.delete { background: none; border: none; color: #bbb; cursor: pointer; font-size: 1em; padding: 0; }
+    button.delete:hover { color: #e00; }
+    h2 { margin-bottom: 12px; }
+
+    #theme-toggle { position: fixed; top: 16px; right: 20px; background: none; border: 1px solid #ccc; color: inherit; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+    #theme-toggle:hover { background: #eee; }
+
+    body.dark { background: #1a1a1a; color: #ddd; }
+    body.dark th { border-bottom-color: #444; }
+    body.dark td { border-bottom-color: #333; }
+    body.dark tr:hover td { background: #252525; }
+    body.dark .days { color: #888; }
+    body.dark .empty { color: #555; }
+    body.dark form.add input { border-color: #444; }
+    body.dark #theme-toggle { border-color: #555; }
+    body.dark #theme-toggle:hover { background: #2a2a2a; }
+  </style>
+</head>
+<body>
+  <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+
+  <h1>Birthday Reminder</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birthday</th>
+        <th>Days until</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in birthdays %}
+      <tr>
+        <td>{{ b['Name'] }}</td>
+        <td>{{ b['Birthday'].strftime('%B %d') }}</td>
+        <td class="days">
+          {% if b['days_until'] == 0 %}
+            Today!
+          {% elif b['days_until'] == 1 %}
+            Tomorrow
+          {% else %}
+            {{ b['days_until'] }} days
+          {% endif %}
+        </td>
+        <td>
+          <form method="post" action="/birthdays/delete">
+            <input type="hidden" name="partition_key" value="{{ b['PartitionKey'] }}">
+            <input type="hidden" name="row_key" value="{{ b['RowKey'] }}">
+            <button class="delete" type="submit" title="Delete">✕</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty">No birthdays yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Add birthday</h2>
+  <form class="add" method="post" action="/birthdays">
+    <label>
+      Name
+      <input type="text" name="name" placeholder="Jane Doe" required>
+    </label>
+    <label>
+      Birthday
+      <input type="date" name="birthday" required>
+    </label>
+    <button type="submit">Add</button>
+  </form>
+
+  <script>
+    const btn = document.getElementById('theme-toggle');
+
+    function applyTheme(dark) {
+      document.body.classList.toggle('dark', dark);
+      btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
+    }
+
+    function toggleTheme() {
+      const dark = !document.body.classList.contains('dark');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      applyTheme(dark);
+    }
+
+    applyTheme(localStorage.getItem('theme') === 'dark');
+  </script>
+</body>
+</html>
