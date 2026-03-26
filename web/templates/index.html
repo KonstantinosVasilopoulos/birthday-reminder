@@ -22,6 +22,11 @@
     button.delete:hover { color: #e00; }
     h2 { margin-bottom: 12px; }
 
+    nav { margin-bottom: 24px; }
+    nav a { margin-right: 16px; color: inherit; text-decoration: none; font-size: 0.95em; opacity: 0.6; }
+    nav a:hover { opacity: 1; }
+    nav a.active { opacity: 1; font-weight: bold; border-bottom: 2px solid currentColor; padding-bottom: 2px; }
+
     #theme-toggle { position: fixed; top: 16px; right: 20px; background: none; border: 1px solid #ccc; color: inherit; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
     #theme-toggle:hover { background: #eee; }
 
@@ -38,6 +43,11 @@
 </head>
 <body>
   <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+
+  <nav>
+    <a href="/" class="active">Birthdays</a>
+    <a href="/namedays">Name Days</a>
+  </nav>
 
   <h1>Birthday Reminder</h1>
 

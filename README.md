@@ -8,6 +8,8 @@ There is a web application that is used to create and delete birthday entries in
 
 ![Web app interface](./docs/br_web_app.png)
 
+![Name days tab](./docs/br_namedays.png)
+
 ## Prerequisites
 
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)

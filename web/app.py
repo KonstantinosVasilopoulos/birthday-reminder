@@ -11,6 +11,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import shared.storage as storage
+import shared.namedays as namedays
 
 app = FastAPI()
 templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), 'templates'))
@@ -44,6 +45,19 @@ async def create_birthday(name: str = Form(...), birthday: str = Form(...)):
     })
     table_client.close()
     return RedirectResponse('/', status_code=303)
+
+
+@app.get('/namedays', response_class=HTMLResponse)
+async def namedays_page(request: Request):
+    today = datetime.date.today()
+    entries = sorted(namedays.NAME_DAYS.items())
+    rows = [{'month': m, 'day': d, 'names': names} for (m, d), names in entries]
+    return templates.TemplateResponse('namedays.html', {
+        'request': request,
+        'rows': rows,
+        'today_month': today.month,
+        'today_day': today.day,
+    })
 
 
 @app.post('/birthdays/delete')
