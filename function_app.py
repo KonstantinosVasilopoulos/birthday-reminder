@@ -32,3 +32,6 @@ def birthday_reminder(timer: func.TimerRequest) -> None:
     logging.debug(f'Found {len(names_today)} name day(s) today')
     if names_today:
         notifier.send_nameday_notification(names_today)
+
+    notifications_sent = len(birthdays_today) + len(upcoming_birthdays) + len(names_today)
+    logging.info(f'Finished execution; sent {notifications_sent} notifications')
